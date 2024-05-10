@@ -1,0 +1,3 @@
+hello:xin chao
+world:the gioi
+bye:tam biet

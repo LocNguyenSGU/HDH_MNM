@@ -1,10 +1,13 @@
 #!/bin/bash
-min = $1;
-max = $1;
-
-for i in $* ; do
-    [ $i -lt $min ] && min=$i
-    [ $i -gt $max ] && max=$i
+max=$1
+min=$1
+for i in $*; do
+    if [ $i -gt $max ]; then
+        max=$i
+    fi
+    if [ $i -lt $min ]; then
+        min=$i
+    fi
 done
-echo "min la: $min"
-echo "max la: $max"
+echo "So lon nhat la: $max"
+echo "So nho nhat la: $min"

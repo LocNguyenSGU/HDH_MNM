@@ -1,0 +1,11 @@
+1#Nguyễn Van#Nam#01/01/1990#HàNội#nam#PhòngA#3000#a@gmail.com#0899345677
+2#Nguyễn Thị#Hương#02/02/1991#HồChíMinh#Nữ#PhòngB#1000#b@gmail.com#0899345678
+3#Trần Văn#Tuấn#03/03/1992#ĐàNẵng#Nam#PhòngC#500#c@gmail.com#0899345679
+4#Trần Thị#Trang#04/04/1993#HảiPhòng#Nữ#PhòngA#900#d@gmail.com#0899345680
+5#Lê Văn#Long#05/05/1994#CầnThơ#Nam#PhòngD#1000#e@gmail.com#0899345681
+6#Lê Thị#Liên#06/06/1995#HàTĩnh#Nữ#PhòngB#1700#f@gmail.com#0899345682
+7#Hoàng Văn#Hải#07/07/1996#NghệAn#Nam#PhòngB#1200#g@gmail.com#0899345683
+8#Hoàng Thị#Hằng#08/08/1997#HảiDương#Nữ#PhòngC#1300#h@gmail.com#0899345684
+9#Phạm Văn#Phú#09/09/1998#BắcNinh#Nam#PhòngA#1400#i@gmail.com#0899345685
+10#Phạm Thị#Phương#10/10/1999#QuảngNinh#Nữ#PhòngD#1500#k@gmail.com#0899345686
+11#Nguyễn Văn#An#01/01/1990#HàNội#Nam#PhòngA#3000#a@gmail.com#0899345677
