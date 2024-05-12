@@ -3,12 +3,12 @@
 function docFileNV {
     if [ -f dataNV.txt ]; then
         printf "%s\n" "                                          DANH SACH NHAN VIEN"
-        printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-10s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Que quan" "Gioi tinh" "Don vi" "Luong" "Email" "So dien thoai"
-        printf "%s\n" "--------------------------------------------------------------------------------------------------------------------"
+        printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-10s|%-12s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Que quan" "Gioi tinh" "Don vi" "Email" "So dien thoai" "Chuc vu"
+        printf "%s\n" "------------------------------------------------------------------------------------------------------------------------"
         awk -F '#' '{
-            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n", $1, $2, $3, $4, $5, $6, $7, $9, $10, $11
         }' dataNV.txt
-        printf "%s\n" "--------------------------------------------------------------------------------------------------------------------"
+        printf "%s\n" "------------------------------------------------------------------------------------------------------------------------"
     else
         echo "Tep dataNv.txtx khong ton tai."
     fi
@@ -73,16 +73,13 @@ function thongKeDanhSachMucLuongMoiNhatNamTuXDenY {
             return
         fi
         sortNgayTangDan=$(echo "$luong" | sort -t'#' -k2.7,2.10n -k2.4,2.5n -k2.1,2.2n)
-        echo "$sortNgayTangDan"
         # -t'#': Đặt dấu phân cách là #.
         # -k2.7,2.10n: Sắp xếp theo phần năm (từ cột 7 đến 10) trong ngày tháng năm.
         # -k2.4,2.5n: Nếu phần năm giống nhau, sắp xếp theo phần tháng (từ cột 4 đến 5) trong ngày tháng năm.
         # -k2.1,2.2n: Nếu phần tháng và năm giống nhau, sắp xếp theo phần ngày (từ cột 1 đến 2) trong ngày tháng năm.
         dongCuoi=$(echo "$sortNgayTangDan" | tail -1)
         ngayMoiNhat=$(echo "$dongCuoi" | cut -d "#" -f 2)
-        echo "ngayMoiNhat: $ngayMoiNhat"
         dataLuongMoiNhat=$(echo "$sortNgayTangDan" | grep "$ngayMoiNhat")
-        echo "$dataLuongMoiNhat"
         declare -a danhSachNhanVien  # Khai báo một mảng để lưu trữ thông tin của các nhân viên
 
         while read line; do
@@ -92,12 +89,12 @@ function thongKeDanhSachMucLuongMoiNhatNamTuXDenY {
         done <<< "$dataLuongMoiNhat"
 
         echo "Danh sach nhan vien co muc luong moi nhat tu $mucLuongX den $mucLuongY:"
-        printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-10s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Que quan" "Gioi tinh" "Don vi" "Luong" "Email" "So dien thoai"
-        printf "%s\n" "--------------------------------------------------------------------------------------------------------------------"
-        # In ra thông tin của từng nhân viên trong mảng
+        printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-10s|%-12s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Que quan" "Gioi tinh" "Don vi" "Email" "So dien thoai" "Chuc vu"
+        printf "%s\n" "------------------------------------------------------------------------------------------------------------------------"
+        # In ra thông tin của từng nhân viên trong mảng`
         for dataNhanVien in "${danhSachNhanVien[@]}"; do
             echo "$dataNhanVien" | awk -F '#' '{
-                printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+                printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n", $1, $2, $3, $4, $5, $6, $7, $9, $10, $11
             }'
         done
         read -p "Ban co muon tiep tuc khong(y/n)?" option
@@ -136,7 +133,7 @@ function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi { # hàm này in ra kế
     # In ra danh sách nhân viên có mức lương cao nhất theo từng đơn vị
     for nv in "${danhSachNVCoMucLuongCaoNhat[@]}"; do
         echo "$nv" | awk -F '#' '{
-            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n", $1, $2, $3, $4, $5, $6, $7, $9, $10, $11
         }'
     done
 }
@@ -155,20 +152,20 @@ function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi {
 }
 END {
     printf "                       DANH SACH NHAN VIEN CO MUC LUONG CAO NHAT THEO TUNG DON VI\n"
-    printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", "ID", "Ho va ten lot", "Ten", "Ngay sinh", "Que quan", "Gioi tinh", "Don vi", "Luong", "Email", "So dien thoai"
-    printf "--------------------------------------------------------------------------------------------------------------------\n"
+    printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s\n", "ID", "Ho va ten lot", "Ten", "Ngay sinh", "Que quan", "Gioi tinh", "Don vi", "Luong", "Email", "So dien thoai", "Chuc vu"
+    printf "------------------------------------------------------------------------------------------------------------------------\n"
     for (department in max_salaries) {
         n = split(max_employees[department], employees, "\n")
         for (i = 1; i <= n; i++) {
             split(employees[i], fields, "#")
-            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8], fields[9], fields[10]
+            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n", fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[9], fields[10], fields[11]
             if (i < n) {
                 split(employees[i+1], next_fields, "#")
                 if (next_fields[7] != fields[7]) {
-                    printf "--------------------------------------------------------------------------------------------------------------------\n"
+                    printf "------------------------------------------------------------------------------------------------------------------------\n"
                 }
             } else {
-                printf "--------------------------------------------------------------------------------------------------------------------\n"
+                printf "------------------------------------------------------------------------------------------------------------------------\n"
             }
         }
     }

@@ -1,4 +1,11 @@
 #!/bin/bash
+# For MacOS
+checkDOB(){
+    # -j: date không thay đổi giá trị của hệ thống ngày và giờ, mà chỉ thực hiện phân tích và định dạng ngày được cung cấp.
+    # -f "%d/%m/%Y": xác định định dạng của chuỗi ngày tháng năm qua tham số $1
+    # "+%d/%m/%Y": xác định định dạng của kết quả mà date sẽ trả về
+    [[ $(date -j -f "%d/%m/%Y" "$1" "+%d/%m/%Y" 2> /dev/null) == $1 ]] && return 0 || return 1
+}
 
 # Hàm kiểm tra xem ngày có hợp lệ khong
 checkDOB2() {
@@ -83,11 +90,11 @@ until [[ "$option" == "no" || "$option" == "n" ]]; do
     echo "===================="
     cat dataNV.txt | awk -F '#' '{print $1 " - " $2 " " $3}'
 
-    read -p "nhap mã nhân viên cần chỉnh sửa: " id
+    read -p "Nhap ma nhan vien can chinh sua: " id
 
     emp_info=$(awk -F'#' -v id="$id" '$1 == id {print}' dataNV.txt)
     if [ -z "$emp_info" ]; then
-        echo "Mã số nhân viên khong tồn tại." && continue
+        echo "Ma so nhan vien khong ton tai." && continue
     fi
 
     read -p "Nhap ho và ten lot moi (neu khong muon thay doi, nhan Enter): " fname
@@ -105,54 +112,65 @@ until [[ "$option" == "no" || "$option" == "n" ]]; do
             read -p "nhap ten moi: " name
         done
     fi
-    dob=""
-    while [ "$dob" == "" ];do
-        read -p "nhap ngay sinh (dang dd/mm/yyyy): " dob
-        checkDOB2 $dob
-        [ $? -eq 0 ] && break || dob=""
-    done
+
+    read -p "nhap ngay sinh moi (neu khong muon thay doi, nhan Enter): " dob
+    if [ ! -z "$dob" ]; then
+        while ! checkDOB2 "$dob"; do
+            echo -p "Ngay sinh khong hop le. Vui long nhap lai (dd/mm/yyyy)." $dob
+        done
+    fi
        
-    read -p "nhap noi sinh moi: " place_of_birth
+    read -p "nhap noi sinh moi (neu khong muon thay doi, nhan Enter): " place_of_birth
     if [ ! -z "$place_of_birth" ]; then
         while ! is_valid_name "$place_of_birth"; do
-            echo "noi sinh khong co ki tu đat biet. Vui long nhap lai"
+            echo "Noi sinh khong co ki tu đat biet. Vui long nhap lai"
             echo -n "Noi sinh moi: "
             read place_of_birth
         done
     fi
-    read -p "nhap gioi tinh moi: " gender
+    read -p "Nhap gioi tinh moi (neu khong muon thay doi, nhan Enter): " gender
     if [ ! -z "$gender" ]; then
         while ! is_valid_gender "$gender"; do
-            echo "gioi tinh la nam hoac nu.Vui long nhap lai"
+            echo "Gioi tinh la nam hoac nu.Vui long nhap lai"
             echo -n "Gioi tinh moi: "
             read gender
         done
     fi
-    read -p "nhap phong ban moi: " department
+    read -p "Nhap don vi (neu khong muon thay doi, nhan Enter): " department
     if [ ! -z "$department" ]; then
         while ! is_valid_name "$department"; do
-            echo "phong ban khong chua ki tu dac biet. Vui long nhap lai"
-            echo -n "phong ban moi: "
+            echo "Don vi khong chua ki tu dac biet. Vui long nhap lai"
+            echo -n "Don vi moi: "
             read department
         done
     fi
+    department=$(echo "$department" | tr '[:upper:]' '[:lower:]')
     
-    read -p "nhap email moi (neu khong muon thay doi, nhan Enter): " email
+    read -p "Nhap email moi (neu khong muon thay doi, nhan Enter): " email
     if [ ! -z "$email" ]; then
         while ! is_valid_email "$email"; do
-            echo "Đinh dang email khong hop le. Vui long nhap lai."
+            echo "Dinh dang email khong hop le. Vui long nhap lai."
             echo -n "Email moi: "
             read email
         done
     fi
-    read -p "nhap so đien thoai moi (neu khong muon thay doi, nhan Enter): " phone
+    read -p "Nhap so dien thoai moi (neu khong muon thay doi, nhan Enter): " phone
     if [ ! -z "$phone" ]; then
         while ! is_valid_phone "$phone"; do
-            echo "so dien thoai khong hợp lệ. Vui long nhap lai (10 chu so)."
-            echo -n "so dien thoai: "
+            echo "So dien thoai khong hop le. Vui long nhap lai (10 chu so)."
+            echo -n "So dien thoai: "
             read phone
         done
-    fi    
+    fi  
+
+    read -p "Nhap chuc vu (neu khong muon thay doi, nhan Enter): " chucVu
+    if [ ! -z "$chucVu" ]; then
+        while ! is_valid_name "$chucVu"; do
+            echo "Chuc vu khong chua ki tu dac biet. Vui long nhap lai"
+            echo -n "Chuc vu moi: "
+            read chucVu
+        done
+    fi  
     
     if [ "$fname" != "" ]; then
         awk -v id="$id" -v newFullname="$fname" 'BEGIN {FS = "#"; OFS = "#"} $1 == id {$2 = newFullname} 1' dataNV.txt > tmp
@@ -193,8 +211,13 @@ until [[ "$option" == "no" || "$option" == "n" ]]; do
         awk -v id="$id" -v newphone="$phone" 'BEGIN {FS = "#"; OFS = "#"} $1 == id {$10 = newphone} 1' dataNV.txt > tmp 
         mv tmp dataNV.txt
     fi
+
+    if [ "$chucVu" != "" ]; then
+        awk -v id="$id" -v newCV="$chucVu" 'BEGIN {FS = "#"; OFS = "#"} $1 == id {$11 = newCV} 1' dataNV.txt > tmp 
+        mv tmp dataNV.txt
+    fi
+    echo "Da cap nhat thong tin nhan vien co ma so $id thanh cong"
     read -p "Ban co muon tiep tuc (yes/no or y/n)? " option
 done
 
-echo "Ket thuc chuong trinh."
 }

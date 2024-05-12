@@ -1,165 +1,62 @@
 #!/bin/bash
-
-# Hàm kiểm tra xem ngày có hợp lệ không
-checkDOB2() {
-    date -d "$1" "+%d/%m/%Y" > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        return 0
-    else
-        return 1
-    fi
+# For MacOS
+checkDOB(){
+    # -j: date không thay đổi giá trị của hệ thống ngày và giờ, mà chỉ thực hiện phân tích và định dạng ngày được cung cấp.
+    # -f "%d/%m/%Y": xác định định dạng của chuỗi ngày tháng năm qua tham số $1
+    # "+%d/%m/%Y": xác định định dạng của kết quả mà date sẽ trả về
+    [[ $(date -j -f "%d/%m/%Y" "$1" "+%d/%m/%Y" 2> /dev/null) == $1 ]] && return 0 || return 1
 }
 
-# Hàm kiểm tra có kí tự đặc biệt không
-function is_valid_name() {
-    if [[ "$1" =~ ^[[:alnum:][:space:]-]+$ ]]; then
-        return 0
-    else
-        return 1
-    fi
+checkEmployeeExistence() {
+    grep -q "^$1#" dataNV.txt && return 0 ||  return 1
 }
 
-# Hàm kiểm tra Ten có chứa kí tự chữ và dấu cách
-function is_valid_name1() {
-    if [[ "$1" =~ ^[[:alpha:][:space:]-]+$ ]]; then
-        return 0
-    else
-        return 1
-    fi
+checkSalaryValidity() {
+    [[ $1 =~ ^[0-9]+$ ]] && [[ $1 -ge 0 ]]
 }
 
-# Hàm kiểm tra So đien thoai có hợp lệ không
-function is_valid_phone() {
-    if [[ "$1" =~ ^[0-9]{10}$ ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Hàm kiểm tra email có đúng định dạng chuẩn không
-function is_valid_email() {
-    if [[ "$1" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Hàm kiểm tra Gioi tinh có giá trị hợp lệ
-function is_valid_gender() {
-    gender=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    # Chuyển đổi sang chữ thường
-    if [[ "$gender" =~ ^(nam|nu)$ ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Hàm kiểm tra Muc luongcó giá trị hợp lệ
-function is_valid_salary() {
-    if [[ "$1" =~ ^[0-9]+$ ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Kiểm tra xem dataNV.txt có tồn tại không, nếu không tạo mới
+# Kiểm tra xem file dataNV.txt và LuongThayDoi.txt có tồn tại không
 if [ ! -f "dataNV.txt" ]; then
-    touch dataNV.txt
+    echo "File dataNV.txt khong ton tai"
+    exit 1
 fi
 
-function themNV(){
-    input="yes"
+if [ ! -f "LuongThayDoi.txt" ]; then
+    echo "File LuongThayDoi.txt Khong ton tai."
+    exit 1
+fi
 
-    # Yêu cầu người dùng nhập thông tin nhân viên
-    while [[ "$input" != "no" && "$input" != "n" ]]; do
-        clear
-        # Tìm mã số nhân viên lớn nhất
-        max_id=$(awk -F '#' '{print $1}' dataNV.txt | sort -n | tail -n 1 | awk -F ',' '{print $1}')
+function nhapLuongNhanVien(){
+    clear
+    option="yes"
+    until [[ "$option" == "no" || "$option" == "n" ]]; do
+        read -p "Nhap ma nhan vien: " ma_nv
+        if ! checkEmployeeExistence "$ma_nv"; then
+            echo "ma nhan vien $ma_nv khong ton tai trong file dataNV.txt. Vui long nhap lai."
+            continue
+        fi
+        
+        read -p "Nhap muc luong: " muc_luong
+        while ! checkSalaryValidity "$muc_luong"; do
+            read -p "Muc luong la so va khong duoc am. Vui long nhap lai: " muc_luong
+        done
 
-        # Khởi tạo biến
-        new_id=$((max_id + 1))
-        # Yêu cầu thông tin của nhân viên
-        echo "Them nhan vien moi: "
-        echo -n "Ho va ten lot: "
-        read firstname
-        # Kiểm tra Ten có kí tự đặc biệt không
-        while ! is_valid_name1 "$firstname"; do
-            echo "Ho va ten lot khong duoc chua ki tu dac biet. Vui long nhap lai."
-            echo -n "Ho va ten lot: "
-            read firstname
-        done
-        echo -n "Ten: "
-        read name
-        # Kiểm tra Ten có kí tự đặc biệt không
-        while ! is_valid_name1 "$name"; do
-            echo "Ten khong duoc chua ki tu dac biet. Vui long nhap lai."
-            echo -n "Ten: "
-            read name
-        done
-        echo -n "Ngay sinh (DD/MM/YYYY): "
-        read dob
-        # Kiểm tra định dạng ngày sinh
-        while ! checkDOB2 "$dob"; do
-            echo "Đinh dang ngay khong hop le. Vui long nhap lai theo đinh dang DD/MM/YYYY."
+        read -p "Nhap ngay ap dung (dạng dd/mm/yyyy): " ngay_ap_dung
+        while ! checkDOB2 "$ngay_ap_dung"; do
+            echo "Ngay nhap vao khong hop le. Vui long nhap lai theo đinh dang DD/MM/YYYY."
             echo -n "Ngay sinh (DD/MM/YYYY): "
-            read dob
-        done
-        echo -n "Noi sinh: "
-        read pob
-        while ! is_valid_name "$pob"; do
-            echo "Noi sinh khong duoc chua ki tu dac biet. Vui long nhap lai."
-            echo -n "Noi sinh: "
-            read pob
-        done
-        echo -n "Gioi tinh: "
-        read gender
-        while ! is_valid_gender "$gender"; do
-            echo "Gioi tinh khong hop le. Vui long nhap lai (nam hoặc nu)."
-            echo -n "Gioi tinh: "
-            read gender
-        done
-        echo -n " Don vi: "
-        read department
-        while ! is_valid_name "$department"; do
-            echo "Don vi không chứa kí tự đặc biệt. Vui long nhap lai."
-            echo -n "Don vi: "
-            read department
-        done
-        echo -n "Muc luonghiện tại: "
-        read salary
-        while ! is_valid_salary "$salary"; do
-            echo "Muc luong khong hop le . Vui long nhap lai (chi chua chu so)."
-            echo -n "Muc luong hien tai: "
-            read salary
-        done
-        echo -n "Email: "
-        read email
-        # Kiểm tra định dạng email
-        while ! is_valid_email "$email"; do
-            echo "Dinh dang email khong hop le. Vui long nhap lai."
-            echo -n "Email: "
-            read email
-        done
-        echo -n "So đien thoai: "
-        read phone
-        # Kiểm tra So đien thoai
-        while ! is_valid_phone "$phone"; do
-            echo "So đien thoai khong hop le. Vui long nhap lai (10 chữ số)."
-            echo -n "So đien thoai: "
-            read phone
+            read ngay_ap_dung
         done
 
-        # Thêm thông tin của nhân viên mới vào dataNV.txt
-        echo "$new_id#$firstname#$name#$dob#$pob#$gender#$department#$salary#$email#$phone" >> dataNV.txt
+        # Thêm dữ liệu lương vào file LuongThayDoi.txt
+        echo "$ma_nv#$ngay_ap_dung#$muc_luong" >> LuongThayDoi.txt
+        awk -v id="$ma_nv" -v newML="$muc_luong" 'BEGIN {FS = "#"; OFS = "#"} $1 == id && $8=="-1" {$8 = newML} 1' dataNV.txt > tmp 
+        mv tmp dataNV.txt
+        echo "Đa them du lieu cho nhan vien co ma $ma_nv."
 
-        # Hỏi người dùng có muốn thêm nhân viên khác không
-        echo -n "Ban co muon them nhan vien khac khong? (yes/no or y/n): "
-        read input
+        read -p "Ban co muon tiep tuc (yes/no)? " option
     done
 
-    echo "Them nhan vien thanh cong."
+    echo "Ket thuc chuong trinh."
 }
+

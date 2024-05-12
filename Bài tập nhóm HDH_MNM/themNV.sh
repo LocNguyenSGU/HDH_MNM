@@ -1,4 +1,11 @@
 #!/bin/bash
+# For MacOS
+checkDOB(){
+    # -j: date không thay đổi giá trị của hệ thống ngày và giờ, mà chỉ thực hiện phân tích và định dạng ngày được cung cấp.
+    # -f "%d/%m/%Y": xác định định dạng của chuỗi ngày tháng năm qua tham số $1
+    # "+%d/%m/%Y": xác định định dạng của kết quả mà date sẽ trả về
+    [[ $(date -j -f "%d/%m/%Y" "$1" "+%d/%m/%Y" 2> /dev/null) == $1 ]] && return 0 || return 1
+}
 
 # Hàm kiểm tra xem ngày có hợp lệ không
 checkDOB2() {
@@ -78,7 +85,7 @@ function themNV(){
     while [[ "$input" != "no" && "$input" != "n" ]]; do
         clear
         # Tìm mã số nhân viên lớn nhất
-        max_id=$(awk -F '#' '{print $1}' dataNV.txt | sort -n | tail -n 1 | awk -F ',' '{print $1}')
+        max_id=$(awk -F '#' '{print $1}' dataNV.txt | sort -n | tail -n 1 | awk -F '#' '{print $1}')
 
         # Khởi tạo biến
         new_id=$((max_id + 1))
@@ -88,7 +95,7 @@ function themNV(){
         read firstname
         # Kiểm tra Ten có kí tự đặc biệt không
         while ! is_valid_name1 "$firstname"; do
-            echo "Ho va ten lot khong duoc chua ki tu dac biet. Vui long nhap lai."
+            echo "Ho va ten lot khong duoc chua ki tu dac biet hoac chu so. Vui long nhap lai."
             echo -n "Ho va ten lot: "
             read firstname
         done
@@ -96,7 +103,7 @@ function themNV(){
         read name
         # Kiểm tra Ten có kí tự đặc biệt không
         while ! is_valid_name1 "$name"; do
-            echo "Ten khong duoc chua ki tu dac biet. Vui long nhap lai."
+            echo "Ten khong duoc chua ki tu dac biet hoac chu so. Vui long nhap lai."
             echo -n "Ten: "
             read name
         done
@@ -104,7 +111,7 @@ function themNV(){
         read dob
         # Kiểm tra định dạng ngày sinh
         while ! checkDOB2 "$dob"; do
-            echo "Đinh dang ngay khong hop le. Vui long nhap lai theo đinh dang DD/MM/YYYY."
+            echo "Ngay nhap vao khong hop le. Vui long nhap lai theo đinh dang DD/MM/YYYY."
             echo -n "Ngay sinh (DD/MM/YYYY): "
             read dob
         done
@@ -118,24 +125,26 @@ function themNV(){
         echo -n "Gioi tinh: "
         read gender
         while ! is_valid_gender "$gender"; do
-            echo "Gioi tinh khong hop le. Vui long nhap lai (nam hoặc nu)."
+            echo "Gioi tinh khong hop le. Vui long nhap lai (nam hoac nu)."
             echo -n "Gioi tinh: "
             read gender
         done
-        echo -n " Don vi: "
+        gender=$(echo "$gender" | tr '[:upper:]' '[:lower:]')
+        echo -n "Don vi: "
         read department
         while ! is_valid_name "$department"; do
-            echo "Don vi không chứa kí tự đặc biệt. Vui long nhap lai."
+            echo "Don vi khong chua ki tu dac biet. Vui long nhap lai."
             echo -n "Don vi: "
             read department
         done
-        echo -n "Muc luonghiện tại: "
-        read salary
-        while ! is_valid_salary "$salary"; do
-            echo "Muc luong khong hop le . Vui long nhap lai (chi chua chu so)."
-            echo -n "Muc luong hien tai: "
-            read salary
-        done
+        department=$(echo "$department" | tr '[:upper:]' '[:lower:]')
+        # echo -n "Muc luong hien tai: "
+        # read salary
+        # while ! is_valid_salary "$salary"; do
+        #     echo "Muc luong khong hop le . Vui long nhap lai (chi chua chu so)."
+        #     echo -n "Muc luong hien tai: "
+        #     read salary
+        # done
         echo -n "Email: "
         read email
         # Kiểm tra định dạng email
@@ -148,18 +157,22 @@ function themNV(){
         read phone
         # Kiểm tra So đien thoai
         while ! is_valid_phone "$phone"; do
-            echo "So đien thoai khong hop le. Vui long nhap lai (10 chữ số)."
+            echo "So đien thoai khong hop le. Vui long nhap lai (10 chu so)."
             echo -n "So đien thoai: "
             read phone
         done
-
+        echo -n "Chuc vu: "
+        read chucVu
+        while ! is_valid_name "$chucVu"; do
+            echo "Chuc vu khong chua ki tu dac biet. Vui long nhap lai."
+            echo -n "Chuc vu: "
+            read chucVu
+        done
         # Thêm thông tin của nhân viên mới vào dataNV.txt
-        echo "$new_id#$firstname#$name#$dob#$pob#$gender#$department#$salary#$email#$phone" >> dataNV.txt
-
+        echo "$new_id#$firstname#$name#$dob#$pob#$gender#$department#-1#$email#$phone#$chucVu" >> dataNV.txt
+        echo "Thong tin nhan vien da duoc them vao file dataNV.txt."
         # Hỏi người dùng có muốn thêm nhân viên khác không
         echo -n "Ban co muon them nhan vien khac khong? (yes/no or y/n): "
         read input
     done
-
-    echo "Them nhan vien thanh cong."
 }
