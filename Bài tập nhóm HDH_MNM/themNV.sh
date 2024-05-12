@@ -44,10 +44,13 @@ fi
 
 
 
-input="yes"
 
-# Yêu cầu người dùng nhập thông tin nhân viên
-while [ "$input" != "no" ]; do
+function themNV(){
+    input="yes"
+
+    # Yêu cầu người dùng nhập thông tin nhân viên
+ while [ "$input" != "no" ]; do
+ 	clear
     # Tìm mã số nhân viên lớn nhất
     max_id=$(awk -F '#' '{print $1}' dataNV.txt | sort -n | tail -n 1 | awk -F ',' '{print     $1}')
 
@@ -113,4 +116,4 @@ while [ "$input" != "no" ]; do
 done
 
 echo "Thêm nhân viên thành công."
-
+}

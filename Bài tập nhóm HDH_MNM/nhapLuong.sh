@@ -15,9 +15,11 @@ if [ ! -f "LuongThayDoi.txt" ]; then
     exit 1
 fi
 
+function nhapLuongNhanVien(){
 option="yes"
 
 until [ "$option" == "no" ]; do
+clear
     read -p "Nhập mã nhân viên: " ma_nv
     if ! checkEmployeeExistence "$ma_nv"; then
         echo "Mã nhân viên $ma_nv không tồn tại trong file dataNV.txt. Vui lòng nhập lại."
@@ -34,4 +36,4 @@ until [ "$option" == "no" ]; do
 done
 
 echo "Kết thúc chương trình."
-
+}

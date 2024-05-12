@@ -37,6 +37,7 @@ isValidEmail() {
     fi
 }
 
+function suaNV(){
 # Kiểm tra xem dataNV.txt có tồn tại không
 if [ ! -f "dataNV.txt" ]; then
     echo "File dataNV.txt không tồn tại."
@@ -46,9 +47,10 @@ fi
 option="yes"
 
 until [ "$option" == "no" ]; do
+	clear
     echo "Danh sách nhân viên:"
     echo "===================="
-    cat dataNV.txt | sort | awk -F ',' '{print $1 " - " $2}'
+    cat dataNV.txt | awk -F '#' '{print $1 " - " $2 " " $3}'
 
     read -p "Nhập mã nhân viên cần chỉnh sửa: " id
 
@@ -125,4 +127,4 @@ until [ "$option" == "no" ]; do
 done
 
 echo "Kết thúc chương trình."
-
+}
