@@ -1,6 +1,5 @@
 #!bin/bash
 
-LANG=vi_VN.UTF-8
 
 source lam.sh
 source loc.sh
@@ -14,19 +13,19 @@ while true
     	clear
     	echo "0. In danh sach nhan vien"
     	echo "1. Nhap thong tin nhan vien"
-    	echo "2. Cap nhat thong tin nhan vien (tru ma so nhan vien khong the  chinh sua)"
+    	echo "2. Cap nhat thong tin nhan vien (tru ma so nhan vien khong the chinh sua)"
         echo "3. Thong ke danh sach nhan vien theo tung don vi"
         echo "4. Liet ke danh sach nhan vien cua don vi x , co nam sinh y (x,y do nguoi dung nhap vao)"
         echo "5. Thong ke danh sach nhan vien co sinh nhat vao thang x (x do nguoi dung nhap vao)"
-        echo "6. Liet ke danh sach nhan vien ma ho ten co chu x , gioi tinh y , sinh nam z (x,y,z do nguoi dung nhap vao)"
+        echo "6. Liet ke danh sach nhan vien ma ho ten co chu x, gioi tinh y, sinh nam z (x,y,z do nguoi dung nhap vao)"
         echo "7. Nhap luong nhan vien"
-    	echo "8. Xem quá trình thay đổi lương của 1 nhân viên"
-    	echo "9. Thống kê danh sách nhân viên có mức lương mới nhất nằm trong khoảng X đến Y"
-    	echo "10. Liệt kê danh sách nhân viên có mức lương lớn nhất theo từng đơn vị"
-        echo "11. Exit"
+    	echo "8. Xem qua trinh thay doi luong cua 1 nhan vien"
+    	echo "9. Thong ke danh sach nhan vien co muc luong moi nhat nam trong khoang x den y"
+    	echo "10. Liet ke danh sach nhan vien co muc luong lon nhat theo tung don vi"
+        echo "11. Thoat"
         read -p "Nhap lua chon cua ban : " luaChon
         case $luaChon in
-            0) docFile;;
+            0) docFileNV;;
             1) themNV;;
             2) suaNV;;
             3) func131;;

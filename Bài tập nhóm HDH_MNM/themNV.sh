@@ -1,5 +1,11 @@
 #!/bin/bash
-
+# For MacOS
+checkDOB(){
+    # -j: date không thay đổi giá trị của hệ thống ngày và giờ, mà chỉ thực hiện phân tích và định dạng ngày được cung cấp.
+    # -f "%d/%m/%Y": xác định định dạng của chuỗi ngày tháng năm qua tham số $1
+    # "+%d/%m/%Y": xác định định dạng của kết quả mà date sẽ trả về
+    [[ $(date -j -f "%d/%m/%Y" "$1" "+%d/%m/%Y" 2> /dev/null) == $1 ]] && return 0 || return 1
+}
 # Hàm kiểm tra xem ngày có hợp lệ không
 checkDOB2() {
     date -d "$1" "+%d/%m/%Y" > /dev/null 2>&1
