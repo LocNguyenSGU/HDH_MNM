@@ -32,7 +32,7 @@ func131() {
 }
 func132(){
 	option="y"
-	while [ $option == "y" ] ;
+	while [ $option == "y" ]
 		do
 			clear
 			coin=0

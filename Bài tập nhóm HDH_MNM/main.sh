@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 
 source lam.sh
@@ -17,7 +17,7 @@ while true
         echo "3. Thong ke danh sach nhan vien theo tung don vi"
         echo "4. Liet ke danh sach nhan vien cua don vi x , co nam sinh y (x,y do nguoi dung nhap vao)"
         echo "5. Thong ke danh sach nhan vien co sinh nhat vao thang x (x do nguoi dung nhap vao)"
-        echo "6. Liet ke danh sach nhan vien ma ho ten co chu x, gioi tinh y, sinh nam z (x,y,z do nguoi dung nhap vao)"
+        echo "6. Liet ke danh sach nhan vien  ma ho ten co chu x, gioi tinh y, sinh nam z (x,y,z do nguoi dung nhap vao)"
         echo "7. Nhap luong nhan vien"
     	echo "8. Xem qua trinh thay doi luong cua 1 nhan vien"
     	echo "9. Thong ke danh sach nhan vien co muc luong moi nhat nam trong khoang x den y"
