@@ -10,7 +10,7 @@ function docFileNV {
         }' dataNV.txt
         printf "%s\n" "--------------------------------------------------------------------------------------------------------------------"
     else
-        echo "Tệp dataNV.txt không tồn tại."
+        echo "Tep dataNv.txtx khong ton tai."
     fi
 }
 
@@ -44,27 +44,27 @@ function thongKeDanhSachMucLuongMoiNhatNamTuXDenY {
     option="yes"
     while [[ $option == "yes" || $option == "y" ]]
     do
-        read -p "Nhap muc luong X: " mucLuongX
-        read -p "Nhap muc luong Y: " mucLuongY
+        read -p "Nhap muc luong x: " mucLuongX
+        read -p "Nhap muc luong y: " mucLuongY
         regexNumber='^[0-9]+$'
         #Kiểm tra xem các giá trị nhập vào có là số âm không
         if [[ $mucLuongX -lt 0 ]] || [[ $mucLuongY -lt 0 ]]; then
-            echo "Mức lương không được âm."
+            echo "Muc luong khong duoc am."
             continue
         fi
         # Kiểm tra xem các giá trị nhập vào có phải là số không
         if ! [[ $mucLuongX =~ $regexNumber ]] || ! [[ $mucLuongY =~ $regexNumber ]]; then
-            echo "Mức lương phải là số."
+            echo "Muc luong phai la so."
             continue
         fi
         # Kiểm tra xem các giá trị nhập vào có trống không
         if [[ -z $mucLuongX ]] || [[ -z $mucLuongY ]]; then
-            echo "Không được để trống mức lương."
+            echo "Khong duoc de trong muc luong."
             continue
         fi
         # Kiểm tra xem mức lương X có nhỏ hơn mức lương Y không
         if [ $mucLuongX -gt $mucLuongY ]; then
-            echo "Mức lương X phải nhỏ hơn mức lương Y."
+            echo "Muc luong x phai nho hon muc luong y."
             continue
         fi
         # Tìm mức lương từ X đến Y

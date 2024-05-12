@@ -1,10 +1,10 @@
-#bin/bash
+#!/bin/bash
 
 LANG=vi_VN.UTF-8
 
 func131() {
 	option="y"
-	while [ $option == "y" ] ; do
+	while [ $option == "y" || $option == "yes" ] ; do
 	clear
 	coin=0
 	regex='^[a-zA-Z ]+$|^[\p{L} ]+$'
@@ -23,7 +23,7 @@ func131() {
 	echo "-------------------------------------------------------------------------------------"
 	awk -F '#' -v tdv="$tenDonVi" '{if (tdv == tolower($7)) {printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10;coin=1}}END{ if ( coin == 0 ) {print"Khong co ket qua"}}' dataNV.txt
 	read -p "Ban co muon tiep tuc khong(y/n)?" option
-	until [[ $option == "y" || $option == "n" ]]
+	until [[ $option == "y" || $option == "n" || $option == "yes" || $option == "no"]]
 	do
 		echo "ki tu khong hop le"
 		read -p "Ban co muon tiep tuc khong(y/n)?" option
@@ -75,7 +75,7 @@ func132(){
 
 func133(){
 	option="y"
-	while [ $option == "y" ] ; do
+	while [ $option == "y" || $option == "yes" ] ; do
 	clear
 	regexNumber='^[0-9]+$'
 	coin=0
@@ -92,7 +92,7 @@ func133(){
 	printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n" "STT" "Ho" "Ten" "Ngay sinh" "Dia chi" "Gioi tinh" "Phong" "Luong" "Email" "SDT"
 	awk -F '#' -v ts="$thangSinh" '{split($4,date,"/");if ( ts == date[2]) {printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10;coin=1}}END{ if ( coin == 0 ) {print"Khong co ket qua"}}' dataNV.txt
 	read -p "Ban co muon tiep tuc khong(y/n)?" option
-	until [[ $option == "y" || $option == "n" ]]
+	until [[ $option == "y" || $option == "n" || $option == "yes" || $option == "no"]]
 	do
 		echo "ki tu khong hop le"
 		read -p "Ban co muon tiep tuc khong(y/n)?" option
@@ -103,7 +103,7 @@ func133(){
 
 func134(){
 	option="y"
-	while [ $option == "y" ] ; do
+	while [ $option == "y" || $option == "yes" ] ; do
 	clear
 	coin=0
 	regexAlpha='^[a-zA-Z ]+$|^[\p{L} ]+$'
@@ -144,7 +144,7 @@ func134(){
 	printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n" "STT" "Ho" "Ten" "Ngay sinh" "Dia chi" "Gioi tinh" "Phong" "Luong" "Email" "SDT"
 	awk -F '#' -v ht="$hoTen" -v ns="$namSinh" -v gt="$gioiTinh" '{split($4,date,"/");if ( tolower(gt) == tolower($6) && ns == date[3] && ( tolower($2) ~ tolower(ht) || tolower($3) ~ tolower(ht) ) ) {printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10;coin=1}}END{ if ( coin == 0 ) {print"Khong co ket qua"}}' dataNV.txt
 	read -p "Ban co muon tiep tuc khong(y/n)?" option
-	until [[ $option == "y" || $option == "n" ]]
+	until [[ $option == "y" || $option == "n" || $option == "yes" || $option == "no"]]
 	do
 		echo "ki tu khong hop le"
 		read -p "Ban co muon tiep tuc khong(y/n)?" option
