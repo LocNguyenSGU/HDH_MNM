@@ -25,8 +25,7 @@ function quaTrinhThayDoiMucLuongTheoIdNV {
             echo "Ma nhan vien $idNV khong ton tai."
             continue
         fi
-
-        echo "Qua trinh thay doi muc luong cua nhan vien co ma $idNV:"
+        awk -F "#" -v id='$idNV' '$1 == id {print "Ten nhan vien: " $2 " " $3}' dataNV.txt
         # Su dung awk de loc va in ra qua trinh thay doi muc luong dua tren ma nhan vien
         awk -F "#" -v id="$idNV" '$1 == id {print "Ngay: " $2 " - Luong: " $3}' LuongThayDoi.txt
 
@@ -140,4 +139,38 @@ function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi { # hàm này in ra kế
             printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
         }'
     done
+}
+function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi {
+    clear
+    awk -F '#' '{
+    department = $7
+    salary = $8
+    employee_info = $0
+    if (salary > max_salaries[department]) {
+        max_salaries[department] = salary
+        max_employees[department] = employee_info
+    } else if (salary == max_salaries[department]) {
+        max_employees[department] = max_employees[department] "\n" employee_info
+    }
+}
+END {
+    printf "                       DANH SACH NHAN VIEN CO MUC LUONG CAO NHAT THEO TUNG DON VI\n"
+    printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", "ID", "Ho va ten lot", "Ten", "Ngay sinh", "Que quan", "Gioi tinh", "Don vi", "Luong", "Email", "So dien thoai"
+    printf "--------------------------------------------------------------------------------------------------------------------\n"
+    for (department in max_salaries) {
+        n = split(max_employees[department], employees, "\n")
+        for (i = 1; i <= n; i++) {
+            split(employees[i], fields, "#")
+            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-8s|%-15s|%-13s|\n", fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8], fields[9], fields[10]
+            if (i < n) {
+                split(employees[i+1], next_fields, "#")
+                if (next_fields[7] != fields[7]) {
+                    printf "--------------------------------------------------------------------------------------------------------------------\n"
+                }
+            } else {
+                printf "--------------------------------------------------------------------------------------------------------------------\n"
+            }
+        }
+    }
+}' dataNV.txt
 }
