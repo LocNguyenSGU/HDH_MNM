@@ -7,7 +7,7 @@ function func131 {
 	while [[ $option == "y" || $option == "yes" ]] ; do
 	clear
 	coin=0
-	regex='^[a-zA-Z0-9 ]+$'
+	regex='^[a-zA-Z ]+$'
 	while true
 	do
 		read -p "Nhap ten don vi muon tim kiem : " tenDonVi
@@ -36,7 +36,7 @@ function func132 {
 		do
 			clear
 			coin=0
-			regexAlpha='^[a-zA-Z0-9 ]+$'
+			regexAlpha='^[a-zA-Z ]+$'
 			while true
 				do
 					read -p "Nhap ten don vi : " tenDonVi
@@ -83,9 +83,7 @@ function func133 {
 	while true
 	do
 		read -p "Nhap thang sinh : " thangSinh
-		temp=$thangSinh
-		thangSinh=$((10#$thangSinh))
-		if [[ $temp =~ $regexNumber && $thangSinh -ge 1 && $thangSinh -le 12  ]]
+		if [[ $thangSinh =~ $regexNumber && $thangSinh -ge 1 && $thangSinh -le 12  ]]
 		then
 				break;
 		else
@@ -110,7 +108,7 @@ function func134 {
 	while [[ $option == "y" || $option == "yes" ]] ; do
 	clear
 	coin=0
-	regexAlpha='^[a-zA-Z]+$'
+	regexAlpha='^[a-zA-Z ]+$'
 	while true
 	do
 		read -p "Nhap chu can tim trong ho ten : " hoTen
@@ -118,7 +116,7 @@ function func134 {
 		then
 			break
 		else
-			echo "Chu can tim chi chua chu cai"
+			echo "Chu can tim chi chua chu cai, khoang trang"
 		fi
 	done
 	

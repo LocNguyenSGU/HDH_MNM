@@ -89,7 +89,6 @@ function thongKeDanhSachMucLuongMoiNhatNamTuXDenY {
         done <<< "$dataLuongMoiNhat"
 
         echo "Danh sach nhan vien co muc luong moi nhat tu $mucLuongX den $mucLuongY:"
-        echo "Ngay co muc luong moi nhat: $ngayMoiNhat"
         printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-10s|%-12s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Que quan" "Gioi tinh" "Don vi" "Email" "So dien thoai" "Chuc vu"
         printf "%s\n" "------------------------------------------------------------------------------------------------------------------------"
         # In ra thông tin của từng nhân viên trong mảng`
@@ -105,10 +104,6 @@ function thongKeDanhSachMucLuongMoiNhatNamTuXDenY {
         done
     done
     
-}
-function test {
-    danhSach=$(sort -t'#' -k1.1,1.2n -k2.7,2.10n -k2.4,2.5n -k2.1,2.2n LuongThayDoi.txt | awk -F "#" -v id="1" ' if ($1 == id) {temp=$0} else {print temp; id=$1; temp=$0} END {print temp}')
-    ehco "$danhSach" | awk -F "#" '$3 >= 100 && $3 <= 200 {print}'
 }
 function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi { # hàm này in ra kết quả đúng nhưng định dạng của nó bị xấu
     # sẽ chỉnh lại sau

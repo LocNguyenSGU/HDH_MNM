@@ -94,7 +94,7 @@ until [[ "$option" == "no" || "$option" == "n" ]]; do
 
     emp_info=$(awk -F'#' -v id="$id" '$1 == id {print}' dataNV.txt)
     if [ -z "$emp_info" ]; then
-        echo "Ma so nhan vien khong ton tai." &&  echo "nhan phim bat ki de tiep tuc" && read -n 1 -s -p "" && continue
+        echo "Ma so nhan vien khong ton tai." && continue
     fi
 
     read -p "Nhap ho và ten lot moi (neu khong muon thay doi, nhan Enter): " fname
@@ -115,7 +115,7 @@ until [[ "$option" == "no" || "$option" == "n" ]]; do
 
     read -p "nhap ngay sinh moi (neu khong muon thay doi, nhan Enter): " dob
     if [ ! -z "$dob" ]; then
-        while ! checkDOB "$dob"; do
+        while ! checkDOB2 "$dob"; do
             echo -p "Ngay sinh khong hop le. Vui long nhap lai (dd/mm/yyyy)." $dob
         done
     fi

@@ -110,7 +110,7 @@ function themNV(){
         echo -n "Ngay sinh (DD/MM/YYYY): "
         read dob
         # Kiểm tra định dạng ngày sinh
-        while ! checkDOB "$dob"; do
+        while ! checkDOB2 "$dob"; do
             echo "Ngay nhap vao khong hop le. Vui long nhap lai theo đinh dang DD/MM/YYYY."
             echo -n "Ngay sinh (DD/MM/YYYY): "
             read dob

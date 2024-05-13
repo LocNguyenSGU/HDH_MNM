@@ -42,7 +42,7 @@ function nhapLuongNhanVien(){
         done
 
         read -p "Nhap ngay ap dung (dạng dd/mm/yyyy): " ngay_ap_dung
-        while ! checkDOB "$ngay_ap_dung"; do
+        while ! checkDOB2 "$ngay_ap_dung"; do
             echo "Ngay nhap vao khong hop le. Vui long nhap lai theo đinh dang DD/MM/YYYY."
             echo -n "Ngay sinh (DD/MM/YYYY): "
             read ngay_ap_dung
