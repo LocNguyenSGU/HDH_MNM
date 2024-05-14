@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function docFileNV {
+    clear
     if [ -f dataNV.txt ]; then
         printf "%s\n" "                                          DANH SACH NHAN VIEN"
         printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-10s|%-12s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Que quan" "Gioi tinh" "Don vi" "Email" "So dien thoai" "Chuc vu"
@@ -25,10 +26,9 @@ function quaTrinhThayDoiMucLuongTheoIdNV {
             echo "Ma nhan vien $idNV khong ton tai."
             continue
         fi
-        awk -F "#" -v id='$idNV' '$1 == id {print "Ten nhan vien: " $2 " " $3}' dataNV.txt
+        awk -F "#" -v id="$idNV" '$1 == id {print "Ten nhan vien: " $2 " " $3}' dataNV.txt
         # Su dung awk de loc va in ra qua trinh thay doi muc luong dua tren ma nhan vien
-        awk -F "#" -v id="$idNV" '$1 == id {print "Ngay: " $2 " - Luong: " $3}' LuongThayDoi.txt
-
+        sort -t "#" -k2.7,2.10n -k2.4,2.5n -k2.1,2.2n LuongThayDoi.txt |  awk -F "#" -v id="$idNV" '$1 == id {print "Ngay: " $2 " - Luong: " $3}'
 	    read -p "Ban co muon tiep tuc khong(y/n)?" option
         until [[ $option == "y" || $option == "n" || $option == "yes" || $option == "no" ]]; do
             echo "Ki tu khong hop le."
@@ -43,24 +43,17 @@ function thongKeDanhSachMucLuongMoiNhatNamTuXDenY {
     option="yes"
     while [[ $option == "yes" || $option == "y" ]]
     do
-        read -p "Nhap muc luong x: " mucLuongX
-        read -p "Nhap muc luong y: " mucLuongY
         regexNumber='^[0-9]+$'
-        #Kiểm tra xem các giá trị nhập vào có là số âm không
-        if [[ $mucLuongX -lt 0 ]] || [[ $mucLuongY -lt 0 ]]; then
-            echo "Muc luong khong duoc am."
-            continue
-        fi
-        # Kiểm tra xem các giá trị nhập vào có phải là số không
-        if ! [[ $mucLuongX =~ $regexNumber ]] || ! [[ $mucLuongY =~ $regexNumber ]]; then
-            echo "Muc luong phai la so."
-            continue
-        fi
-        # Kiểm tra xem các giá trị nhập vào có trống không
-        if [[ -z $mucLuongX ]] || [[ -z $mucLuongY ]]; then
-            echo "Khong duoc de trong muc luong."
-            continue
-        fi
+        read -p "Nhap muc luong x: " mucLuongX
+        while ! [[ $mucLuongX =~ $regexNumber ]]; do 
+            echo "Muc luong x phai la so va lon hon hoac bang 0."
+            read -p "Nhap muc luong x: " mucLuongX
+        done
+        read -p "Nhap muc luong y: " mucLuongY
+        while ! [[ $mucLuongY =~ $regexNumber ]]; do 
+            echo "Muc luong y phai la so va lon hon hoac bang 0."
+            read -p "Nhap muc luong y: " mucLuongY
+        done
         # Kiểm tra xem mức lương X có nhỏ hơn mức lương Y không
         if [ $mucLuongX -gt $mucLuongY ]; then
             echo "Muc luong x phai nho hon muc luong y."
@@ -110,38 +103,7 @@ function test {
     danhSach=$(sort -t'#' -k1.1,1.2n -k2.7,2.10n -k2.4,2.5n -k2.1,2.2n LuongThayDoi.txt | awk -F "#" -v id="1" ' if ($1 == id) {temp=$0} else {print temp; id=$1; temp=$0} END {print temp}')
     ehco "$danhSach" | awk -F "#" '$3 >= 100 && $3 <= 200 {print}'
 }
-function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi { # hàm này in ra kết quả đúng nhưng định dạng của nó bị xấu
-    # sẽ chỉnh lại sau
-    clear
-    declare -a danhSachNVCoMucLuongCaoNhat  # Khai báo một mảng để lưu trữ thông tin của nhân viên có mức lương cao nhất theo từng đơn vị
 
-    while IFS= read -r line; do
-        danhSachNVCoMucLuongCaoNhat+=("$line")
-    done < <(awk -F '#' '{
-        unit = $7
-        salary = $8
-        if (salary >= max_salary[unit]) {
-            max_salary[unit] = salary
-            employee_info[unit, salary] = employee_info[unit, salary] ? employee_info[unit, salary] "\n" $0 : $0
-        }
-    }
-    END {
-        for (unit in max_salary) {
-            printf "|%-15s|%-8s|%-8s|%-15s|%-13s|\n", "Đơn vị: " unit, "- Mức lương cao nhất:", "", max_salary[unit], ""
-            split(employee_info[unit, max_salary[unit]], employees, "\n")
-            for (i in employees) {
-                print employees[i]
-            }
-        }
-    }' dataNV.txt)
-
-    # In ra danh sách nhân viên có mức lương cao nhất theo từng đơn vị
-    for nv in "${danhSachNVCoMucLuongCaoNhat[@]}"; do
-        echo "$nv" | awk -F '#' '{
-            printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n", $1, $2, $3, $4, $5, $6, $7, $9, $10, $11
-        }'
-    done
-}
 function lietKeDanhSachNVCoMucLuongLonNhatTheoTungDonVi {
     clear
     awk -F '#' '{

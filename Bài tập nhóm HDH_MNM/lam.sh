@@ -92,9 +92,9 @@ function func133 {
 			echo "Thang sinh chi tu 1 den 12 và thuoc dang MM (vi du: 06)"
 		fi
 	done
-	printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n" "STT" "Ho" "Ten" "Ngay sinh" "Dia chi" "Gioi tinh" "Phong" "Luong" "Email" "SDT"
+	printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n" "ID" "Ho va ten lot" "Ten" "Ngay sinh" "Dia chi" "Gioi tinh" "Don vi" "Email" "So dien thoai" "Chuc vu"
 	echo "-----------------------------------------------------------------------------------------------------------------------"
-	awk -F '#' -v ts="$thangSinh" '{split($4,date,"/");if ( ts == date[2]) {printf "|%-4s|%-18s|%-8s|%-10s|%-13s|%-10s|%-10s|%-10s|%-15s|%-10s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10;coin=1}}END{ if ( coin == 0 ) {print"Khong co ket qua"}}' dataNV.txt
+	awk -F '#' -v ts="$thangSinh" '{split($4,date,"/");if ( ts == date[2]) {printf "|%-4s|%-14s|%-7s|%-11s|%-15s|%-10s|%-8s|%-15s|%-13s|%-12s|\n",$1,$2,$3,$4,$5,$6,$7,$9,$10,$11;coin=1}}END{ if ( coin == 0 ) {print"Khong co ket qua"}}' dataNV.txt
 	read -p "Ban co muon tiep tuc khong(y/n)?" option
 	until [[ $option == "y" || $option == "n" || $option == "yes" || $option == "no" ]]
 	do
@@ -125,7 +125,7 @@ function func134 {
 	
 	while true
 	do
-		read -p "Nhap gioi tinh  : " gioiTinh
+		read -p "Nhap gioi tinh (nam hoac nu): " gioiTinh
 		gioiTinh=$(echo $gioiTinh | tr '[:upper:]' '[:lower:]')
 		if [[ $gioiTinh =~ $regexAlpha && "$gioiTinh" = "nam" || "$gioiTinh" = "nu"  ]]
 		then

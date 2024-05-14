@@ -1,0 +1,8 @@
+#!/bin/bash
+
+danhsach="$(sort -t"#" -k1.1,1.2n -k2.7,2.10n -k2.4,2.5n -k2.1,2.2n LuongThayDoi.txt | awk -F '#' -v id="1" '{if ($1 == id ) {str=$0} else { printf "%s\n",str;id = $1}}END{ printf "%s\n",str }'
+)"
+
+echo "$danhsach" | awk -F'#' '{if ($3 >= "1000" && $3 <= "2000") {print}}' > danhsach.txt
+
+awk -F'#' ' FNR==NR { data[$1]=$1;cd[$1]=$2} FNR!=NR { if ( $1 == data[$1] ) {print $1 "-" $2 " " $3 "-" cd[$1] "-" $8 }  }' danhsach.txt dataNV.txt
